@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - FinWeb</title>
+  <link rel="stylesheet" href="../src/css/global.css">
+  <style>
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .login-box {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+    
+    .login-box h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <h1>FinWeb</h1>
+      <form id="loginForm">
+        <label>Email</label>
+        <input type="email" id="email" required>
+        
+        <label>Senha</label>
+        <input type="password" id="password" required>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+          Entrar
+        </button>
+      </form>
+      
+      <p class="text-center text-muted" style="margin-top: 2rem;">
+        Não tem conta? <a href="/signup.html">Cadastre-se</a>
+      </p>
+    </div>
+  </div>
+  
+  <script type="module">
+    import { initSupabase } from '../src/js/utils/db.js';
+    import { loginUser } from '../src/js/modules/auth.js';
+    
+    (async () => {
+      await initSupabase();
+      
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        try {
+          await loginUser(email, password);
+          window.location.href = '/dashboard.html';
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

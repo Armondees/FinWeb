@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - FinWeb</title>
+  <link rel="stylesheet" href="../src/css/global.css">
+  <style>
+    .navbar {
+      background: var(--primary);
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .navbar h1 {
+      color: white;
+      margin: 0;
+    }
+    
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin-left: 2rem;
+      cursor: pointer;
+    }
+    
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+    
+    .sidebar {
+      background: var(--light);
+      min-height: calc(100vh - 60px);
+      padding: 2rem;
+    }
+    
+    .dashboard-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-card h3 {
+      color: var(--gray);
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <h1>💰 FinWeb</h1>
+    <div class="nav-links">
+      <a href="/accounts.html">Contas</a>
+      <a href="/transactions.html">Transações</a>
+      <a href="/cards.html">Cartões</a>
+      <a href="/reports.html">Relatórios</a>
+      <a onclick="logout()">Sair</a>
+    </div>
+  </nav>
+  
+  <div class="sidebar">
+    <div class="dashboard-content">
+      <h2>Dashboard</h2>
+      
+      <div class="stats">
+        <div class="stat-card">
+          <h3>Saldo Total</h3>
+          <div class="value" id="totalBalance">R$ 0,00</div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Receitas (Mês)</h3>
+          <div class="value" style="color: var(--secondary);" id="monthIncome">R$ 0,00</div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>Despesas (Mês)</h3>
+          <div class="value" style="color: var(--danger);" id="monthExpense">R$ 0,00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module">
+    import { initSupabase, getCurrentUser, db } from '../src/js/utils/db.js';
+    import { logoutUser } from '../src/js/modules/auth.js';
+    import { format } from '../src/js/utils/format.js';
+    
+    window.logout = async () => {
+      try {
+        await logoutUser();
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+    
+    (async () => {
+      try {
+        await initSupabase();
+        const user = await getCurrentUser();
+        
+        if (!user) {
+          window.location.href = '/login.html';
+          return;
+        }
+        
+        // Carregar dados
+        const accounts = await db.select('accounts', { eq: { user_id: user.id } });
+        
+        // Calcular saldo total
+        const totalBalance = accounts.reduce((sum, acc) => sum + (acc.current_balance || 0), 0);
+        document.getElementById('totalBalance').textContent = format.money(totalBalance);
+        
+        console.log('✅ Dashboard carregado com sucesso');
+      } catch (error) {
+        console.error('❌ Erro ao carregar dashboard:', error);
+        alert(error.message);
+      }
+    })();
+  </script>
+</body>
+</html>
