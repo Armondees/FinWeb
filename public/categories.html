@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categorias - FinWeb</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #020617;
+      --card:   #0f172a;
+      --border: #1e293b;
+      --text:   #e2e8f0;
+      --muted:  #94a3b8;
+      --green:  #22c55e;
+      --cyan:   #06b6d4;
+      --danger: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { display: flex; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 220px; height: 100vh; position: sticky; top: 0;
+      background: var(--card); border-right: 1px solid var(--border);
+      padding: 24px 16px; display: flex; flex-direction: column;
+    }
+    .logo { font-size: 20px; font-weight: 600; margin-bottom: 32px; padding: 0 8px; }
+    .logo span { color: var(--green); }
+    .menu { flex: 1; }
+    .menu a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; margin-bottom: 4px; border-radius: 8px;
+      text-decoration: none; color: var(--muted); font-size: 14px;
+      transition: all 0.15s; cursor: pointer;
+    }
+    .menu a:hover, .menu a.active { background: rgba(34,197,94,0.1); color: var(--green); }
+    .menu a.danger:hover { background: rgba(239,68,68,0.1); color: var(--danger); }
+    .menu-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+/* Estilos da Sidebar */
+    .menu-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      padding: 12px 12px 6px;
+      font-weight: 600;
+      opacity: 0.7;
+      display: block; /* Garante que fique em uma linha própria */
+    }
+
+    .menu-divider {
+      border: 0;
+      border-top: 1px solid var(--border);
+      margin: 10px 12px;
+      opacity: 0.5;
+    }
+    /* MAIN */
+    .main { flex: 1; padding: 28px 32px; overflow-y: auto; }
+
+    .page-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+    }
+    .page-header h2 { font-size: 20px; font-weight: 600; }
+    .header-actions { display: flex; gap: 10px; }
+
+    /* TABS */
+    .tabs {
+      display: flex; gap: 4px; margin-bottom: 24px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 4px; width: fit-content;
+    }
+    .tab {
+      padding: 8px 20px; border-radius: 7px; border: none;
+      background: transparent; color: var(--muted);
+      font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+    }
+    .tab.active { background: var(--border); color: var(--text); }
+
+    /* BOTÕES */
+    .btn {
+      padding: 9px 18px; border-radius: 8px; border: none;
+      font-size: 13px; font-weight: 500; cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.82; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary { background: linear-gradient(90deg, var(--green), var(--cyan)); color: white; }
+    .btn-danger  { background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.25); }
+    .btn-ghost   { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+
+    /* STATS */
+    .stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+      gap: 14px; margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px;
+    }
+    .stat-card h3 { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .stat-card .value { font-size: 22px; font-weight: 600; }
+    .green  { color: var(--green); }
+    .cyan   { color: var(--cyan); }
+    .purple { color: #a855f7; }
+
+    /* LISTA DE CATEGORIAS REESTRUTURADA */
+    .categories-list {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .list-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 120px;
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .cat-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 120px;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .cat-row:hover { background: rgba(255,255,255,0.01); }
+
+    /* Estilo para Subcategorias */
+    .cat-row.sub-row {
+      background: rgba(0,0,0,0.2);
+      grid-template-columns: 2fr 1fr 1fr 120px;
+      padding-left: 45px; /* Indentação */
+      border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+    }
+
+    .cat-info { display: flex; align-items: center; gap: 12px; }
+    .cat-name { font-size: 14px; font-weight: 500; }
+    
+    .cat-actions { 
+      display: flex; 
+      gap: 8px; 
+      justify-content: flex-end; 
+    }
+
+    .add-sub-inline {
+      color: var(--cyan);
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0 5px;
+      line-height: 1;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--muted);
+    }    
+    .empty .icon { font-size: 36px; margin-bottom: 12px; }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); z-index: 100;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px; width: 100%; max-width: 440px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block; font-size: 11px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%; padding: 10px 12px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 14px; outline: none; transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--green); }
+    .form-group select option { background: var(--card); }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Color picker */
+    .color-picker-wrap { display: flex; gap: 8px; align-items: center; }
+    .color-picker-wrap input[type="color"] {
+      width: 44px; height: 38px; padding: 2px 4px; cursor: pointer;
+      border-radius: 8px; border: 1px solid var(--border); background: var(--bg);
+    }
+    .color-presets { display: flex; gap: 6px; flex-wrap: wrap; }
+    .color-preset {
+      width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent;
+      cursor: pointer; transition: border-color 0.15s;
+    }
+    .color-preset:hover, .color-preset.selected { border-color: white; }
+
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 18px; font-size: 13px; z-index: 200;
+      transform: translateY(80px); opacity: 0; transition: all 0.3s;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-color: var(--green); color: var(--green); }
+    .toast.error   { border-color: var(--danger); color: var(--danger); }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { padding: 20px 16px; }
+      .categories-grid { grid-template-columns: 1fr; }
+    }
+    /* --- NOVOS ESTILOS PARA LISTA EXPANSÍVEL --- */
+    .categories-list {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .list-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 120px;
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .cat-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 120px;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .cat-row:hover { background: rgba(255,255,255,0.01); }
+
+    /* Estilo para Categoria Pai que pode ser clicada */
+    .parent-row { cursor: pointer; }
+
+    /* Estilo para Subcategorias com recuo e esconder/mostrar */
+    .cat-row.sub-row {
+      background: rgba(0,0,0,0.15);
+      padding-left: 45px; 
+      border-bottom: 1px solid rgba(30, 41, 59, 0.4);
+    }
+
+    .cat-row.sub-row.hidden {
+      display: none;
+    }
+
+    .cat-info { display: flex; align-items: center; gap: 10px; }
+    .cat-name { font-size: 14px; font-weight: 500; }
+
+    /* Ícone de Expansão (Seta) */
+    .expand-icon {
+      font-size: 10px;
+      color: var(--muted);
+      width: 15px;
+      transition: transform 0.2s;
+    }
+    .expanded .expand-icon {
+      transform: rotate(90deg);
+      color: var(--green);
+    }
+
+    .cat-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+    .add-sub-inline {
+      color: var(--cyan);
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 5px;
+      line-height: 1;
+    }
+    .add-sub-inline:hover { color: var(--green); }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">Fin<span>Web</span></div>
+
+  <nav class="menu">
+    <div class="menu-label">Movimentações</div>
+    <a href="/public/dashboard.html">📊 Dashboard</a>
+    <a href="/public/transactions.html">💸 Transações</a>
+    <a href="/public/cards.html">💳 Cartões</a>
+    
+    <hr class="menu-divider">
+
+    <div class="menu-label">Demonstrativos</div>
+    <a href="/public/reports.html">📈 Relatórios</a>
+    <a href="#">🌊 Fluxo de Caixa</a>
+    
+    <hr class="menu-divider">
+
+    <div class="menu-label">Cadastro</div>
+    <a href="/public/accounts.html">🏦 Contas</a>
+    <a href="/public/categories.html">🏷️ Categorias</a>
+    <a href="#">🏢 Centro de Custos</a>
+    <a href="#">🏷️ Tags</a>
+
+    <hr class="menu-divider">
+    <a onclick="logout()" class="danger" style="cursor:pointer">🚪 Sair</a>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="page-header">
+    <h2>🏷️ Categorias</h2>
+    <div class="header-actions">
+      <button class="btn btn-primary" onclick="openModal()">+ Nova Categoria</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">
+      <h3>Total</h3>
+      <div class="value cyan" id="statTotal">—</div>
+    </div>
+    <div class="stat-card">
+      <h3>Receita</h3>
+      <div class="value green" id="statIncome">—</div>
+    </div>
+    <div class="stat-card">
+      <h3>Despesa</h3>
+      <div class="value" style="color:var(--danger)" id="statExpense">—</div>
+    </div>
+    <div class="stat-card">
+      <h3>Subcategorias</h3>
+      <div class="value purple" id="statSub">—</div>
+    </div>
+  </div>
+
+  <!-- FILTRO POR TIPO -->
+  <div class="tabs">
+    <button class="tab active" onclick="filterType('all', this)">Todas</button>
+    <button class="tab" onclick="filterType('income', this)">Receita</button>
+    <button class="tab" onclick="filterType('expense', this)">Despesa</button>
+  </div>
+
+  <!-- GRID DE CATEGORIAS -->
+  <!--<div class="categories-grid" id="categoriesGrid">
+    <div class="empty"><div class="icon">⏳</div>Carregando...</div>
+  </div>
+</div>-->
+
+<div class="categories-list">
+    <div class="list-header">
+      <div>Nome / Categoria</div>
+      <div>Tipo</div>
+      <div>Status</div>
+      <div style="text-align: right;">Ações</div>
+    </div>
+    <div id="categoriesListBody">
+      <div class="empty"><div class="icon">⏳</div>Carregando...</div>
+    </div>
+  </div>
+
+<!-- MODAL CRIAR/EDITAR -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle">Nova Categoria</h3>
+
+    <!-- Categoria pai (só aparece no modal de subcategoria) -->
+    <div class="form-group" id="parentGroup" style="display:none">
+      <label>Categoria Pai</label>
+      <select id="fParent">
+        <option value="">— Selecione —</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Nome *</label>
+      <input type="text" id="fName" placeholder="Ex: Alimentação, Salário...">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Tipo *</label>
+        <select id="fType">
+          <option value="expense">Despesa</option>
+          <option value="income">Receita</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="fActive">
+          <option value="true">Ativa</option>
+          <option value="false">Inativa</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Cor</label>
+      <div class="color-picker-wrap">
+        <input type="color" id="fColor" value="#22c55e">
+        <div class="color-presets" id="colorPresets"></div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="btnSave" onclick="saveCategory()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initSupabase, getCurrentUser, db } from '../src/js/utils/db.js';
+  import { logoutUser } from '../src/js/modules/auth.js';
+
+  let currentUser  = null;
+  let allCategories = [];
+  let editingId    = null;
+  let editingParentId = null; // ao editar subcategoria
+  let currentFilter = 'all';
+
+  const PRESETS = [
+    '#22c55e','#06b6d4','#ef4444','#f97316',
+    '#eab308','#a855f7','#ec4899','#3b82f6',
+    '#14b8a6','#f59e0b','#6366f1','#84cc16'
+  ];
+
+  // ── Toast ─────────────────────────────────────────
+  function toast(msg, type = 'success') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `toast ${type} show`;
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  // ── Color presets ─────────────────────────────────
+  function renderPresets(selected) {
+    const wrap = document.getElementById('colorPresets');
+    wrap.innerHTML = PRESETS.map(c => `
+      <div class="color-preset ${c === selected ? 'selected' : ''}"
+           style="background:${c}"
+           onclick="selectColor('${c}')">
+      </div>`).join('');
+  }
+
+  window.selectColor = (color) => {
+    document.getElementById('fColor').value = color;
+    renderPresets(color);
+  };
+
+  document.addEventListener('change', (e) => {
+    if (e.target.id === 'fColor') renderPresets(e.target.value);
+  });
+
+  // ── Render ────────────────────────────────────────
+  function getParents() {
+    return allCategories.filter(c => !c.parent_id);
+  }
+
+  function getChildren(parentId) {
+    return allCategories.filter(c => c.parent_id === parentId);
+  }
+function renderGrid() {
+    const listBody = document.getElementById('categoriesListBody');
+    if (!listBody) return;
+
+    const parents = getParents().filter(c =>
+      currentFilter === 'all' || c.type === currentFilter
+    );
+
+    if (!parents.length) {
+      listBody.innerHTML = `<div class="empty">🏷️ Nenhuma categoria encontrada.</div>`;
+      return;
+    }
+
+    let html = '';
+
+    parents.forEach(cat => {
+      const subs = getChildren(cat.id);
+      const hasSubs = subs.length > 0;
+
+      // Linha da Categoria Pai com clique para expandir
+      html += `
+        <div class="cat-row parent-row" onclick="toggleSubs('${cat.id}', this)">
+          <div class="cat-info">
+            <span class="expand-icon">${hasSubs ? '▶' : ''}</span>
+            <div class="color-dot" style="background:${cat.color || '#94a3b8'}"></div>
+            <span class="cat-name">${cat.name}</span>
+            <button class="add-sub-inline" title="Adicionar subcategoria" 
+                    onclick="event.stopPropagation(); openSubModal('${cat.id}', '${cat.type}')">+</button>
+          </div>
+          <div><span class="badge badge-${cat.type}">${cat.type === 'income' ? 'Receita' : 'Despesa'}</span></div>
+          <div><span class="badge badge-${cat.is_active ? 'active' : 'inactive'}">${cat.is_active ? 'Ativa' : 'Inativa'}</span></div>
+          <div class="cat-actions">
+            <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation(); editCategory('${cat.id}')">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteCategory('${cat.id}', '${cat.name}')">🗑️</button>
+          </div>
+        </div>
+      `;
+
+      // Linhas das Subcategorias (começam escondidas)
+      subs.forEach(sub => {
+        html += `
+          <div class="cat-row sub-row hidden group-${cat.id}">
+            <div class="cat-info">
+              <div class="sub-dot" style="background:${sub.color || cat.color || '#94a3b8'}"></div>
+              <span class="cat-name" style="font-size: 13px; color: var(--muted)">${sub.name}</span>
+            </div>
+            <div></div> 
+            <div>${!sub.is_active ? '<span class="badge badge-inactive">Inativa</span>' : ''}</div>
+            <div class="cat-actions">
+              <button class="btn btn-ghost btn-sm" onclick="editSubcategory('${sub.id}', '${cat.id}')">✏️</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteCategory('${sub.id}', '${sub.name}')">🗑️</button>
+            </div>
+          </div>
+        `;
+      });
+    });
+
+    listBody.innerHTML = html;
+  }
+  window.toggleSubs = (parentId, rowElement) => {
+    // Seleciona todas as subcategorias deste pai
+    const subRows = document.querySelectorAll(`.group-${parentId}`);
+    
+    // Alterna a visibilidade
+    subRows.forEach(row => {
+      row.classList.toggle('hidden');
+    });
+
+    // Gira a setinha
+    rowElement.classList.toggle('expanded');
+  };
+
+  function updateStats() {
+    const parents  = getParents();
+    const subs     = allCategories.filter(c => c.parent_id);
+    document.getElementById('statTotal').textContent   = parents.length;
+    document.getElementById('statIncome').textContent  = parents.filter(c => c.type === 'income').length;
+    document.getElementById('statExpense').textContent = parents.filter(c => c.type === 'expense').length;
+    document.getElementById('statSub').textContent     = subs.length;
+  }
+
+  // ── Filtro ────────────────────────────────────────
+  window.filterType = (type, btn) => {
+    currentFilter = type;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderGrid();
+  };
+
+  // ── Load ──────────────────────────────────────────
+  async function loadCategories() {
+    allCategories = await db.select('categories', {
+      eq: { user_id: currentUser.id },
+      order: { column: 'created_at', asc: true }
+    });
+    renderGrid();
+    updateStats();
+  }
+
+  // ── Modal: Nova categoria pai ─────────────────────
+  window.openModal = (cat = null) => {
+    editingId       = cat ? cat.id : null;
+    editingParentId = null;
+
+    document.getElementById('modalTitle').textContent = cat ? 'Editar Categoria' : 'Nova Categoria';
+    document.getElementById('parentGroup').style.display = 'none';
+    document.getElementById('fName').value   = cat?.name || '';
+    document.getElementById('fType').value   = cat?.type || 'expense';
+    document.getElementById('fActive').value = cat ? String(cat.is_active) : 'true';
+    document.getElementById('fColor').value  = cat?.color || '#22c55e';
+    renderPresets(cat?.color || '#22c55e');
+    document.getElementById('modalOverlay').classList.add('open');
+  };
+
+  // ── Modal: Nova subcategoria ──────────────────────
+  window.openSubModal = (parentId, parentType) => {
+    editingId       = null;
+    editingParentId = parentId;
+
+    document.getElementById('modalTitle').textContent = 'Nova Subcategoria';
+    document.getElementById('parentGroup').style.display = 'none'; // pai já fixo
+    document.getElementById('fName').value   = '';
+    document.getElementById('fType').value   = parentType; // herda tipo do pai
+    document.getElementById('fActive').value = 'true';
+    document.getElementById('fColor').value  = '#22c55e';
+    renderPresets('#22c55e');
+    document.getElementById('modalOverlay').classList.add('open');
+  };
+
+  // ── Modal: Editar categoria pai ───────────────────
+  window.editCategory = (id) => {
+    const cat = allCategories.find(c => c.id === id);
+    if (cat) openModal(cat);
+  };
+
+  // ── Modal: Editar subcategoria ────────────────────
+  window.editSubcategory = (id, parentId) => {
+    const sub = allCategories.find(c => c.id === id);
+    if (!sub) return;
+    editingId       = id;
+    editingParentId = parentId;
+
+    document.getElementById('modalTitle').textContent   = 'Editar Subcategoria';
+    document.getElementById('parentGroup').style.display = 'none';
+    document.getElementById('fName').value   = sub.name;
+    document.getElementById('fType').value   = sub.type;
+    document.getElementById('fActive').value = String(sub.is_active);
+    document.getElementById('fColor').value  = sub.color || '#22c55e';
+    renderPresets(sub.color || '#22c55e');
+    document.getElementById('modalOverlay').classList.add('open');
+  };
+
+  window.closeModal = () => {
+    document.getElementById('modalOverlay').classList.remove('open');
+    editingId = null;
+    editingParentId = null;
+  };
+
+  document.getElementById('modalOverlay').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  });
+
+  // ── Save ──────────────────────────────────────────
+  window.saveCategory = async () => {
+    const name     = document.getElementById('fName').value.trim();
+    const type     = document.getElementById('fType').value;
+    const isActive = document.getElementById('fActive').value === 'true';
+    const color    = document.getElementById('fColor').value;
+
+    if (!name) return toast('❌ Informe o nome da categoria.', 'error');
+
+    const btn = document.getElementById('btnSave');
+    btn.disabled = true;
+
+    try {
+      const payload = {
+        name,
+        type,
+        color,
+        is_active: isActive,
+        user_id: currentUser.id,
+        parent_id: editingParentId || null
+      };
+
+      if (editingId) {
+        await db.update('categories', { name, type, color, is_active: isActive }, editingId);
+        toast('✅ Categoria atualizada!');
+      } else {
+        await db.insert('categories', payload);
+        toast('✅ Categoria criada!');
+      }
+
+      closeModal();
+      await loadCategories();
+    } catch (err) {
+      toast('❌ ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  // ── Delete ────────────────────────────────────────
+  window.deleteCategory = async (id, name) => {
+    const subs = getChildren(id);
+    const msg  = subs.length
+      ? `A categoria "${name}" tem ${subs.length} subcategoria(s). Excluir também?`
+      : `Deseja excluir a categoria "${name}"?`;
+
+    if (!confirm(msg)) return;
+
+    try {
+      // Exclui subcategorias primeiro
+      for (const sub of subs) {
+        await db.delete('categories', sub.id);
+      }
+      await db.delete('categories', id);
+      toast('✅ Categoria excluída.');
+      await loadCategories();
+    } catch (err) {
+      toast('❌ ' + err.message, 'error');
+    }
+  };
+
+  // ── Logout ────────────────────────────────────────
+  window.logout = async () => {
+    try { await logoutUser(); } catch (e) { alert(e.message); }
+  };
+
+  // ── Init ──────────────────────────────────────────
+  (async () => {
+    try {
+      initSupabase();
+      currentUser = await getCurrentUser();
+      if (!currentUser) { window.location.href = '/public/login.html'; return; }
+      await loadCategories();
+    } catch (err) {
+      console.error('❌', err);
+      alert(err.message);
+    }
+  })();
+</script>
+</body>
+</html>

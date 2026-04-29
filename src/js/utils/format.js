@@ -1,44 +1,60 @@
 // =====================================================
-// FORMAT.JS - Funções de Formatação
+// FORMAT.JS - Utilitários de Formatação
 // =====================================================
 
 export const format = {
   /**
-   * Formatar moeda (BRL)
+   * Formata valor monetário em Real brasileiro
+   * Ex: 1234.5 → "R$ 1.234,50"
    */
   money: (value) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL'
-    }).format(value);
+    }).format(value ?? 0);
   },
-  
+
   /**
-   * Formatar data (dd/mm/yyyy)
+   * Formata data para pt-BR
+   * Ex: "2024-04-28" → "28/04/2024"
    */
-  date: (dateString) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('pt-BR').format(date);
+  date: (value) => {
+    if (!value) return '-';
+    return new Intl.DateTimeFormat('pt-BR').format(new Date(value));
   },
-  
+
   /**
-   * Formatar data e hora
+   * Formata data e hora para pt-BR
+   * Ex: "2024-04-28T14:30:00" → "28/04/2024 14:30"
    */
-  dateTime: (dateString) => {
-    const date = new Date(dateString);
+  datetime: (value) => {
+    if (!value) return '-';
     return new Intl.DateTimeFormat('pt-BR', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
+      dateStyle: 'short',
+      timeStyle: 'short'
+    }).format(new Date(value));
   },
-  
+
   /**
-   * Formatar percentual
+   * Formata número com casas decimais
+   * Ex: 1234.5678 → "1.234,57"
    */
-  percent: (value) => {
-    return `${(value * 100).toFixed(2)}%`;
+  number: (value, decimals = 2) => {
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    }).format(value ?? 0);
+  },
+
+  /**
+   * Formata porcentagem
+   * Ex: 0.1567 → "15,67%"
+   */
+  percent: (value, decimals = 2) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'percent',
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    }).format(value ?? 0);
   }
 };

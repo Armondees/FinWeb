@@ -70,7 +70,7 @@ export const logoutUser = async () => {
   if (error) throw new Error(`❌ Erro ao fazer logout: ${error.message}`);
   
   console.log('✅ Logout realizado com sucesso');
-  window.location.href = '/login.html';
+  window.location.href = '/public/login.html';
 };
 
 /**
@@ -81,7 +81,7 @@ export const requireAuth = async () => {
   
   if (!user) {
     console.warn('⚠️ Usuário não autenticado, redirecionando...');
-    window.location.href = '/login.html';
+    window.location.href = '/public/login.html';
     return null;
   }
   

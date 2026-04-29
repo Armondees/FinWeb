@@ -1,0 +1,26 @@
+{
+  "name": "finweb",
+  "version": "1.0.0",
+  "description": "FinWeb é um sistema financeiro completo desenvolvido com **Supabase** e **JavaScript vanilla**, oferecendo:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+     "dev": "vite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Armondees/Finweb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Armondees/Finweb/issues"
+  },
+  "homepage": "https://github.com/Armondees/Finweb#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.105.1",
+    "vite": "^8.0.10"
+  }
+}

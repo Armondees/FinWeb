@@ -4,142 +4,247 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - FinWeb</title>
-  <link rel="stylesheet" href="../src/css/global.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    .navbar {
-      background: var(--primary);
-      color: white;
-      padding: 1rem;
+    :root {
+      --bg:     #020617;
+      --card:   #0f172a;
+      --border: #1e293b;
+      --text:   #e2e8f0;
+      --muted:  #94a3b8;
+      --green:  #22c55e;
+      --cyan:   #06b6d4;
+      --danger: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+    body {
+      display: flex;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 32px;
+      padding: 0 8px;
+    }
+    .logo span { color: var(--green); }
+
+    .menu { flex: 1; }
+    .menu a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      margin-bottom: 4px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .menu a:hover, .menu a.active {
+      background: rgba(34,197,94,0.1);
+      color: var(--green);
+    }
+    .menu a.danger:hover {
+      background: rgba(239,68,68,0.1);
+      color: var(--danger);
+    }
+
+    .menu-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 12px 0;
+    }
+
+   /* Estilos da Sidebar */
+    .menu-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      padding: 12px 12px 6px;
+      font-weight: 600;
+      opacity: 0.7;
+      display: block; /* Garante que fique em uma linha própria */
+    }
+
+    .menu-divider {
+      border: 0;
+      border-top: 1px solid var(--border);
+      margin: 10px 12px;
+      opacity: 0.5;
+    }
+
+    /* MAIN */
+    .main {
+      flex: 1;
+      padding: 28px 32px;
+      overflow-y: auto;
+    }
+
+    .page-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 24px;
     }
-    
-    .navbar h1 {
-      color: white;
-      margin: 0;
-    }
-    
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      margin-left: 2rem;
-      cursor: pointer;
-    }
-    
-    .nav-links a:hover {
-      text-decoration: underline;
-    }
-    
-    .sidebar {
-      background: var(--light);
-      min-height: calc(100vh - 60px);
-      padding: 2rem;
-    }
-    
-    .dashboard-content {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
+    .page-header h2 { font-size: 20px; font-weight: 600; }
+    .page-header .user-email { font-size: 13px; color: var(--muted); }
+
+    /* STAT CARDS */
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
     }
-    
+
     .stat-card {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 0.5rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
     }
-    
     .stat-card h3 {
-      color: var(--gray);
-      font-size: 0.875rem;
-      margin-bottom: 0.5rem;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
     }
-    
     .stat-card .value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary);
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .stat-card .value.green  { color: var(--green); }
+    .stat-card .value.cyan   { color: var(--cyan); }
+    .stat-card .value.danger { color: var(--danger); }
+
+    /* LOADING */
+    .loading {
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+      padding: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { padding: 20px 16px; }
     }
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <h1>💰 FinWeb</h1>
-    <div class="nav-links">
-      <a href="/accounts.html">Contas</a>
-      <a href="/transactions.html">Transações</a>
-      <a href="/cards.html">Cartões</a>
-      <a href="/reports.html">Relatórios</a>
-      <a onclick="logout()">Sair</a>
-    </div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">Fin<span>Web</span></div>
+
+  <nav class="menu">
+    <div class="menu-label">Movimentações</div>
+    <a href="/public/dashboard.html">📊 Dashboard</a>
+    <a href="/public/transactions.html">💸 Transações</a>
+    <a href="/public/cards.html">💳 Cartões</a>
+    
+    <hr class="menu-divider">
+
+    <div class="menu-label">Demonstrativos</div>
+    <a href="/public/reports.html">📈 Relatórios</a>
+    <a href="#">🌊 Fluxo de Caixa</a>
+    
+    <hr class="menu-divider">
+
+    <div class="menu-label">Cadastro</div>
+    <a href="/public/accounts.html">🏦 Contas</a>
+    <a href="/public/categories.html">🏷️ Categorias</a>
+    <a href="#">🏢 Centro de Custos</a>
+    <a href="#">🏷️ Tags</a>
+
+    <hr class="menu-divider">
+    <a onclick="logout()" class="danger" style="cursor:pointer">🚪 Sair</a>
   </nav>
-  
-  <div class="sidebar">
-    <div class="dashboard-content">
-      <h2>Dashboard</h2>
-      
-      <div class="stats">
-        <div class="stat-card">
-          <h3>Saldo Total</h3>
-          <div class="value" id="totalBalance">R$ 0,00</div>
-        </div>
-        
-        <div class="stat-card">
-          <h3>Receitas (Mês)</h3>
-          <div class="value" style="color: var(--secondary);" id="monthIncome">R$ 0,00</div>
-        </div>
-        
-        <div class="stat-card">
-          <h3>Despesas (Mês)</h3>
-          <div class="value" style="color: var(--danger);" id="monthExpense">R$ 0,00</div>
-        </div>
-      </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="page-header">
+    <h2>Visão Geral</h2>
+    <span class="user-email" id="userEmail"></span>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h3>Saldo Total</h3>
+      <div class="value green" id="totalBalance">—</div>
+    </div>
+    <div class="stat-card">
+      <h3>Receitas (Mês)</h3>
+      <div class="value cyan" id="monthIncome">—</div>
+    </div>
+    <div class="stat-card">
+      <h3>Despesas (Mês)</h3>
+      <div class="value danger" id="monthExpense">—</div>
     </div>
   </div>
-  
-  <script type="module">
-    import { initSupabase, getCurrentUser, db } from '../src/js/utils/db.js';
-    import { logoutUser } from '../src/js/modules/auth.js';
-    import { format } from '../src/js/utils/format.js';
-    
-    window.logout = async () => {
-      try {
-        await logoutUser();
-      } catch (error) {
-        alert(error.message);
+
+  <p class="loading" id="loadingMsg">Carregando dados...</p>
+</div>
+
+<script type="module">
+  import { initSupabase, getCurrentUser, db } from '../src/js/utils/db.js';
+  import { logoutUser } from '../src/js/modules/auth.js';
+  import { format } from '../src/js/utils/format.js';
+
+  window.logout = async () => {
+    try { await logoutUser(); } catch (e) { alert(e.message); }
+  };
+
+  (async () => {
+    try {
+      initSupabase();
+      const user = await getCurrentUser();
+
+      if (!user) {
+        window.location.href = '/public/login.html';
+        return;
       }
-    };
-    
-    (async () => {
-      try {
-        await initSupabase();
-        const user = await getCurrentUser();
-        
-        if (!user) {
-          window.location.href = '/login.html';
-          return;
-        }
-        
-        // Carregar dados
-        const accounts = await db.select('accounts', { eq: { user_id: user.id } });
-        
-        // Calcular saldo total
-        const totalBalance = accounts.reduce((sum, acc) => sum + (acc.current_balance || 0), 0);
-        document.getElementById('totalBalance').textContent = format.money(totalBalance);
-        
-        console.log('✅ Dashboard carregado com sucesso');
-      } catch (error) {
-        console.error('❌ Erro ao carregar dashboard:', error);
-        alert(error.message);
-      }
-    })();
-  </script>
+
+      document.getElementById('userEmail').textContent = user.email;
+
+      const accounts = await db.select('accounts', { eq: { user_id: user.id } });
+
+      const totalBalance = accounts.reduce((sum, acc) => sum + (acc.current_balance || 0), 0);
+      document.getElementById('totalBalance').textContent = format.money(totalBalance);
+      document.getElementById('monthIncome').textContent  = format.money(0); // expandir na Fase 4
+      document.getElementById('monthExpense').textContent = format.money(0); // expandir na Fase 4
+      document.getElementById('loadingMsg').style.display = 'none';
+
+      console.log('✅ Dashboard carregado');
+    } catch (error) {
+      console.error('❌ Erro:', error);
+      alert(error.message);
+    }
+  })();
+</script>
 </body>
 </html>

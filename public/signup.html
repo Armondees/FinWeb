@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - FinWeb</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #020617;
+      --card:   #0f172a;
+      --border: #1e293b;
+      --text:   #e2e8f0;
+      --muted:  #94a3b8;
+      --green:  #22c55e;
+      --cyan:   #06b6d4;
+      --danger: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: radial-gradient(circle at top left, #0f172a, #020617);
+      color: var(--text);
+    }
+
+    .container { display: flex; width: 100%; }
+
+    /* LEFT */
+    .left {
+      width: 45%;
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .logo { font-size: 24px; font-weight: 600; margin-bottom: 36px; }
+    .logo span { color: var(--green); }
+
+    h1 { font-size: 24px; margin-bottom: 6px; }
+    .subtitle { color: var(--muted); margin-bottom: 28px; font-size: 14px; }
+
+    .input-group { position: relative; margin-bottom: 6px; }
+    .input-group input {
+      width: 100%;
+      padding: 13px 13px 13px 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    .input-group input:focus { border-color: var(--green); }
+    .input-group input.error { border-color: var(--danger); }
+    .input-group .icon {
+      position: absolute; left: 13px; top: 50%;
+      transform: translateY(-50%); font-size: 14px;
+      color: var(--muted); pointer-events: none;
+    }
+
+    .error-msg {
+      font-size: 12px; color: var(--danger);
+      margin: 4px 0 10px 2px; display: none;
+    }
+    .error-msg.show { display: block; }
+
+    /* Barra de força da senha */
+    .strength-wrap { display: none; margin: 6px 0 10px; }
+    .strength-wrap.show { display: block; }
+    .strength-bar {
+      height: 3px; border-radius: 4px;
+      background: var(--border); overflow: hidden; margin-bottom: 4px;
+    }
+    .strength-fill { height: 100%; border-radius: 4px; width: 0%; transition: width 0.3s, background 0.3s; }
+    .strength-label { font-size: 11px; color: var(--muted); }
+
+    .btn {
+      width: 100%; padding: 13px; border-radius: 10px; border: none;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+      color: white; font-weight: 600; font-size: 15px;
+      cursor: pointer; transition: opacity 0.2s; margin-top: 8px;
+    }
+    .btn:hover { opacity: 0.88; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .terms {
+      font-size: 12px; color: var(--muted);
+      text-align: center; margin-top: 14px; line-height: 1.5;
+    }
+
+    .login-link {
+      margin-top: 22px; font-size: 13px;
+      color: var(--muted); text-align: center;
+    }
+    .login-link a { color: var(--green); text-decoration: none; }
+
+    /* RIGHT */
+    .right {
+      width: 55%;
+      display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(circle at center, #0c2a1a, #020617);
+      padding: 40px;
+    }
+
+    .features { max-width: 320px; }
+    .features h2 { font-size: 22px; margin-bottom: 8px; }
+    .features > p { color: var(--muted); font-size: 14px; margin-bottom: 32px; line-height: 1.6; }
+
+    .feature-item {
+      display: flex; align-items: flex-start;
+      gap: 14px; margin-bottom: 20px;
+    }
+    .feature-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .feature-text h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .feature-text p  { font-size: 12px; color: var(--muted); margin: 0; }
+
+    .tag {
+      display: inline-block; margin-top: 24px;
+      padding: 6px 14px; border-radius: 20px;
+      background: rgba(34,197,94,0.1); color: var(--green);
+      font-size: 12px; border: 1px solid rgba(34,197,94,0.2);
+    }
+
+    @media (max-width: 768px) {
+      .right { display: none; }
+      .left  { width: 100%; padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="logo">Fin<span>Web</span></div>
+
+    <h1>Criar sua conta</h1>
+    <p class="subtitle">Comece a controlar suas finanças gratuitamente</p>
+
+    <div class="input-group">
+      <span class="icon">📧</span>
+      <input type="email" id="email" placeholder="E-mail" autocomplete="email">
+    </div>
+    <span class="error-msg" id="emailError"></span>
+
+    <div class="input-group">
+      <span class="icon">🔒</span>
+      <input type="password" id="password" placeholder="Senha (mín. 6 caracteres)" autocomplete="new-password">
+    </div>
+    <div class="strength-wrap" id="strengthWrap">
+      <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+      <span class="strength-label" id="strengthLabel"></span>
+    </div>
+    <span class="error-msg" id="passwordError"></span>
+
+    <div class="input-group">
+      <span class="icon">🔑</span>
+      <input type="password" id="passwordConfirm" placeholder="Confirmar senha" autocomplete="new-password">
+    </div>
+    <span class="error-msg" id="confirmError"></span>
+
+    <button class="btn" id="btnSignup">Criar Conta</button>
+
+    <p class="terms">Ao criar sua conta você concorda com os termos de uso e política de privacidade.</p>
+
+    <p class="login-link">Já tem conta? <a href="/public/login.html">Entrar</a></p>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="features">
+      <h2>Tudo que você precisa</h2>
+      <p>Um sistema financeiro completo para organizar sua vida financeira.</p>
+
+      <div class="feature-item">
+        <div class="feature-icon">🏦</div>
+        <div class="feature-text">
+          <h4>Gestão de Contas</h4>
+          <p>Corrente, poupança e investimentos em um só lugar.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">💸</div>
+        <div class="feature-text">
+          <h4>Controle de Transações</h4>
+          <p>Registre receitas e despesas com categorias e tags.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">💳</div>
+        <div class="feature-text">
+          <h4>Cartões de Crédito</h4>
+          <p>Gerencie faturas e limites com facilidade.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📈</div>
+        <div class="feature-text">
+          <h4>Relatórios Detalhados</h4>
+          <p>Visualize seu fluxo de caixa e gastos por categoria.</p>
+        </div>
+      </div>
+
+      <span class="tag">✦ 100% gratuito · Seguro com RLS</span>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { initSupabase } from '../src/js/utils/db.js';
+  import { registerUser } from '../src/js/modules/auth.js';
+
+  initSupabase();
+
+  // Indicador de força da senha
+  document.getElementById('password').addEventListener('input', () => {
+    const val  = document.getElementById('password').value;
+    const wrap = document.getElementById('strengthWrap');
+    const fill = document.getElementById('strengthFill');
+    const lbl  = document.getElementById('strengthLabel');
+
+    if (!val) { wrap.classList.remove('show'); return; }
+    wrap.classList.add('show');
+
+    let score = 0;
+    if (val.length >= 6)             score++;
+    if (val.length >= 10)            score++;
+    if (/[A-Z]/.test(val))           score++;
+    if (/[0-9]/.test(val))           score++;
+    if (/[^A-Za-z0-9]/.test(val))   score++;
+
+    const levels = [
+      { pct: '20%',  color: '#ef4444', label: 'Muito fraca' },
+      { pct: '40%',  color: '#f97316', label: 'Fraca' },
+      { pct: '60%',  color: '#eab308', label: 'Média' },
+      { pct: '80%',  color: '#22c55e', label: 'Forte' },
+      { pct: '100%', color: '#06b6d4', label: 'Muito forte' },
+    ];
+    const lvl = levels[Math.min(score - 1, 4)] || levels[0];
+    fill.style.width      = lvl.pct;
+    fill.style.background = lvl.color;
+    lbl.textContent       = lvl.label;
+    lbl.style.color       = lvl.color;
+  });
+
+  // Helpers de validação
+  function showError(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    msg ? el.classList.add('show') : el.classList.remove('show');
+  }
+
+  function clearErrors() {
+    ['emailError', 'passwordError', 'confirmError'].forEach(id => showError(id, ''));
+    ['email', 'password', 'passwordConfirm'].forEach(id =>
+      document.getElementById(id).classList.remove('error')
+    );
+  }
+
+  // Submit
+  document.getElementById('btnSignup').addEventListener('click', async () => {
+    clearErrors();
+
+    const email   = document.getElementById('email').value.trim();
+    const pass    = document.getElementById('password').value;
+    const confirm = document.getElementById('passwordConfirm').value;
+    let valid = true;
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('emailError', 'Informe um e-mail válido.');
+      document.getElementById('email').classList.add('error');
+      valid = false;
+    }
+    if (pass.length < 6) {
+      showError('passwordError', 'A senha deve ter pelo menos 6 caracteres.');
+      document.getElementById('password').classList.add('error');
+      valid = false;
+    }
+    if (pass !== confirm) {
+      showError('confirmError', 'As senhas não conferem.');
+      document.getElementById('passwordConfirm').classList.add('error');
+      valid = false;
+    }
+    if (!valid) return;
+
+    const btn = document.getElementById('btnSignup');
+    btn.disabled    = true;
+    btn.textContent = 'Criando conta...';
+
+    try {
+      await registerUser(email, pass, confirm);
+      alert('✅ Conta criada!\n\nVerifique seu e-mail para confirmar o cadastro antes de fazer login.');
+      window.location.href = '/public/login.html';
+    } catch (err) {
+      alert('❌ ' + err.message);
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Criar Conta';
+    }
+  });
+
+  // Enter no último campo dispara cadastro
+  document.getElementById('passwordConfirm').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('btnSignup').click();
+  });
+</script>
+</body>
+</html>
