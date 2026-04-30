@@ -331,8 +331,8 @@
     <div class="menu-label">Cadastro</div>
     <a href="/public/accounts.html">🏦 Contas</a>
     <a href="/public/categories.html">🏷️ Categorias</a>
-    <a href="#">🏢 Centro de Custos</a>
-    <a href="#">🏷️ Tags</a>
+    <a href="/public/cost_centers.html">🏢 Centro de Custos</a>
+    <a href="/public/Tags.html">🏷️ Tags</a>
 
     <hr class="menu-divider">
     <a onclick="logout()" class="danger" style="cursor:pointer">🚪 Sair</a>
@@ -450,6 +450,18 @@
   import { initSupabase, getCurrentUser, db } from '../src/js/utils/db.js';
   import { logoutUser } from '../src/js/modules/auth.js';
 
+function activateMenu() {
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.menu a').forEach(link => link.classList.remove('active'));
+
+    if (currentPath.includes('dashboard.html'))     document.getElementById('link-dash')?.classList.add('active');
+    if (currentPath.includes('transactions.html'))  document.getElementById('link-tx')?.classList.add('active');
+    if (currentPath.includes('accounts.html'))      document.getElementById('link-acc')?.classList.add('active');
+    if (currentPath.includes('categories.html'))    document.getElementById('link-cat')?.classList.add('active');
+    if (currentPath.includes('cost-centers.html'))  document.getElementById('link-cost')?.classList.add('active');
+    if (currentPath.includes('tags.html'))          document.getElementById('link-tags')?.classList.add('active');
+  }
+  
   let currentUser  = null;
   let allCategories = [];
   let editingId    = null;

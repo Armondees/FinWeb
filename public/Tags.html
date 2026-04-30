@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tags - FinWeb</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #020617;
+      --card:   #0f172a;
+      --border: #1e293b;
+      --text:   #e2e8f0;
+      --muted:  #94a3b8;
+      --green:  #22c55e;
+      --cyan:   #06b6d4;
+      --danger: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { display: flex; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: 220px; height: 100vh; position: sticky; top: 0; background: var(--card); border-right: 1px solid var(--border); padding: 24px 16px; display: flex; flex-direction: column; }
+    .logo { font-size: 20px; font-weight: 600; margin-bottom: 32px; padding: 0 8px; }
+    .logo span { color: var(--green); }
+    .menu { flex: 1; }
+    .menu a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin-bottom: 4px; border-radius: 8px; text-decoration: none; color: var(--muted); font-size: 14px; transition: all 0.15s; cursor: pointer; }
+    
+    .menu a.active {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--green) !important;
+      font-weight: 600;
+    }
+    
+    .menu a.danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    .menu-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); padding: 12px 12px 6px; font-weight: 600; opacity: 0.7; display: block; }
+    .menu-divider { border: 0; border-top: 1px solid var(--border); margin: 10px 12px; opacity: 0.5; }
+
+    /* MAIN CONTENT */
+    .main { flex: 1; padding: 28px 32px; overflow-y: auto; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    
+    /* TAGS GRID */
+    .tags-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .tag-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+    .tag-card:hover { transform: translateY(-2px); border-color: var(--cyan); }
+    .tag-name { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+    .tag-name::before { content: '#'; color: var(--cyan); font-weight: bold; }
+
+    /* BOTÕES */
+    .btn { padding: 9px 18px; border-radius: 8px; border: none; font-size: 13px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-primary { background: linear-gradient(90deg, var(--green), var(--cyan)); color: white; }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-danger-icon { background: transparent; color: var(--muted); border: none; cursor: pointer; padding: 4px; border-radius: 4px; }
+    .btn-danger-icon:hover { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; max-width: 400px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+    .form-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+    .empty-state { text-align: center; padding: 60px; color: var(--muted); grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+  
+<div class="sidebar">
+  <div class="logo">Fin<span>Web</span></div>
+
+  <nav class="menu">
+    <div class="menu-label">Movimentações</div>
+    <a href="/public/dashboard.html" id="link-dash">📊 Dashboard</a>
+    <a href="/public/transactions.html" id="link-tx">💸 Transações</a>
+    <a href="/public/cards.html" id="link-cards">💳 Cartões</a>
+    
+    <hr class="menu-divider">
+
+    <div class="menu-label">Demonstrativos</div>
+    <a href="/public/reports.html" id="link-rep">📈 Relatórios</a>
+    <a href="#">🌊 Fluxo de Caixa</a>
+    
+    <hr class="menu-divider">
+
+    <div class="menu-label">Cadastro</div>
+    <a href="/public/accounts.html" id="link-acc">🏦 Contas</a>
+    <a href="/public/categories.html" id="link-cat">🏷️ Categorias</a>
+    <a href="/public/cost_centers.html" id="link-cost">🏢 Centro de Custos</a>
+    <a href="/public/tags.html" id="link-tags">🏷️ Tags</a>
+
+    <hr class="menu-divider">
+    <!-- CORREÇÃO DO BOTÃO SAIR[cite: 3] -->
+    <a onclick="logout()" class="danger" style="cursor:pointer">🚪 Sair</a>
+  </nav>
+</div>
+
+<div class="main">
+  <div class="page-header">
+    <h2>🏷️ Gerenciar Tags</h2>
+    <button class="btn btn-primary" onclick="openModal()">+ Nova Tag</button>
+  </div>
+
+  <div class="tags-container" id="tagsList">
+    <div class="empty-state">Carregando tags...</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle" style="margin-bottom: 20px;">Nova Tag</h3>
+    <div class="form-group">
+      <label>Nome da Tag</label>
+      <input type="text" id="tagName" placeholder="Ex: Viagem2024, Reembolsável...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="btnSave" onclick="saveTag()">Salvar Tag</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initSupabase, getCurrentUser, db } from '../src/js/utils/db.js';
+  import { logoutUser } from '../src/js/modules/auth.js'; // IMPORTAÇÃO DO LOGOUT[cite: 1]
+
+  // FUNÇÃO GLOBAL DE LOGOUT[cite: 1]
+  window.logout = async () => {
+    try {
+      await logoutUser();
+    } catch (e) {
+      alert("Erro ao sair: " + e.message);
+    }
+  };
+
+  function activateMenu() {
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.menu a').forEach(link => link.classList.remove('active'));
+
+    if (currentPath.includes('dashboard.html'))     document.getElementById('link-dash')?.classList.add('active');
+    if (currentPath.includes('transactions.html'))  document.getElementById('link-tx')?.classList.add('active');
+    if (currentPath.includes('accounts.html'))      document.getElementById('link-acc')?.classList.add('active');
+    if (currentPath.includes('categories.html'))    document.getElementById('link-cat')?.classList.add('active');
+    if (currentPath.includes('cost_centers.html'))  document.getElementById('link-cost')?.classList.add('active');
+    if (currentPath.includes('tags.html'))          document.getElementById('link-tags')?.classList.add('active');
+  }
+
+  let currentUser = null;
+  let allTags = [];
+  let editingId = null;
+
+  async function loadTags() {
+    try {
+      allTags = await db.select('tags', {
+        eq: { user_id: currentUser.id },
+        order: { column: 'name', asc: true }
+      });
+      renderTags();
+    } catch (error) {
+      console.error("Erro ao carregar tags:", error);
+    }
+  }
+
+  function renderTags() {
+    const container = document.getElementById('tagsList');
+    if (allTags.length === 0) {
+      container.innerHTML = '<div class="empty-state">Nenhuma tag cadastrada ainda.</div>';
+      return;
+    }
+
+    container.innerHTML = allTags.map(tag => `
+      <div class="tag-card">
+        <span class="tag-name">${tag.name}</span>
+        <div style="display: flex; gap: 4px;">
+          <button class="btn-danger-icon" onclick="editTag('${tag.id}', '${tag.name}')" title="Editar">✏️</button>
+          <button class="btn-danger-icon" onclick="deleteTag('${tag.id}', '${tag.name}')" title="Excluir">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window.openModal = () => {
+    editingId = null;
+    document.getElementById('modalTitle').textContent = 'Nova Tag';
+    document.getElementById('tagName').value = '';
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('tagName').focus();
+  };
+
+  window.editTag = (id, name) => {
+    editingId = id;
+    document.getElementById('modalTitle').textContent = 'Editar Tag';
+    document.getElementById('tagName').value = name;
+    document.getElementById('modalOverlay').classList.add('open');
+  };
+
+  window.closeModal = () => {
+    document.getElementById('modalOverlay').classList.remove('open');
+  };
+
+  window.saveTag = async () => {
+    const name = document.getElementById('tagName').value.trim();
+    if (!name) return alert("Por favor, digite um nome para a tag.");
+
+    const btn = document.getElementById('btnSave');
+    btn.disabled = true;
+
+    try {
+      if (editingId) {
+        await db.update('tags', { name }, editingId);
+      } else {
+        await db.insert('tags', {
+          name,
+          user_id: currentUser.id
+        });
+      }
+      closeModal();
+      loadTags();
+    } catch (error) {
+      alert("Erro ao salvar: " + error.message);
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  window.deleteTag = async (id, name) => {
+    if (!confirm(`Tem certeza que deseja excluir a tag #${name}?`)) return;
+
+    try {
+      await db.delete('tags', id);
+      loadTags();
+    } catch (error) {
+      alert("Erro ao excluir: " + error.message);
+    }
+  };
+
+  // Inicialização
+  (async () => {
+    initSupabase();
+    currentUser = await getCurrentUser();
+    if (!currentUser) {
+      window.location.href = '/public/login.html';
+      return;
+    }
+    activateMenu(); // ATIVA O DESTAQUE NO MENU[cite: 3]
+    loadTags();
+  })();
+</script>
+
+</body>
+</html>

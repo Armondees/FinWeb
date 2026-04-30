@@ -27,37 +27,41 @@ Plano de desenvolvimento em 10 fases para completar o sistema financeiro complet
 
 ## FASE 2: Autenticação & Contas 🔄
 
-**Status:** EM PROGRESSO
+**Status:** Completo
 
 ### Autenticação
-- ⬜ Login com email/senha
-- ⬜ Cadastro de usuário
-- ⬜ Recuperação de senha
-- ⬜ Sessão persistente
+- ✅ Login com email/senha
+- ✅ Cadastro de usuário
+- ✅ Recuperação de senha
+- ✅ Sessão persistente
 
 ### Gestão de Contas
-- ⬜ CRUD de contas
-- ⬜ Listar contas
-- ⬜ Editar saldo inicial
-- ⬜ Deletar contas
+- ✅ CRUD de contas
+- ✅ Listar contas
+- ✅ Editar saldo inicial
+- ✅ Deletar contas
 
 ---
 
 ## FASE 3: Categorias & Tags
 
-**Status:** PLANEJADO
+**Status:** Completo
 
 ### Categorias
-- ⬜ CRUD de categorias
-- ⬜ Categorias pai/filho (hierarquia)
-- ⬜ Editar cores
-- ⬜ Ativar/desativar
+- ✅ CRUD de categorias
+- ✅ Categorias pai/filho (hierarquia)
+- ✅ Editar cores
+- ✅ Ativar/desativar
 
 ### Tags
-- ⬜ CRUD de tags
+- ✅ CRUD de tags
 - ⬜ Associar tags a transações
 - ⬜ Filtrar por tags
 
+### Centro de custos
+- ✅ CRUD de Centro de custos
+- ⬜ Associar centro de custos a transações
+- ⬜ Filtrar por centros de custos
 ---
 
 ## FASE 4: Transações Básicas

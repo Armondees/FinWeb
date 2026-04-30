@@ -7,240 +7,105 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:       #020617;
-      --card:     #0f172a;
-      --border:   #1e293b;
-      --text:     #e2e8f0;
-      --muted:    #94a3b8;
-      --green:    #22c55e;
-      --cyan:     #06b6d4;
-      --danger:   #ef4444;
+      --bg:     #020617;
+      --card:   #0f172a;
+      --border: #1e293b;
+      --text:   #e2e8f0;
+      --muted:  #94a3b8;
+      --green:  #22c55e;
+      --cyan:   #06b6d4;
+      --danger: #ef4444;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-
-    body {
-      height: 100vh;
-      display: flex;
-      background: radial-gradient(circle at top left, #0f172a, #020617);
-      color: var(--text);
-    }
-
+    body { min-height: 100vh; display: flex; background: radial-gradient(circle at top left, #0f172a, #020617); color: var(--text); }
     .container { display: flex; width: 100%; }
-
-    /* LEFT */
-    .left {
-      width: 45%;
-      padding: 60px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: 600;
-      margin-bottom: 40px;
-    }
+    .left { width: 45%; padding: 60px; display: flex; flex-direction: column; justify-content: center; }
+    .logo { font-size: 24px; font-weight: 600; margin-bottom: 36px; }
     .logo span { color: var(--green); }
-
-    h1 { font-size: 26px; margin-bottom: 6px; }
-    .subtitle { color: var(--muted); margin-bottom: 32px; font-size: 14px; }
-
-    .input-group {
-      position: relative;
-      margin-bottom: 16px;
-    }
-    .input-group input {
-      width: 100%;
-      padding: 13px 13px 13px 40px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      outline: none;
-      font-size: 14px;
-      transition: border-color 0.2s;
-    }
+    .view { display: none; }
+    .view.active { display: block; }
+    h1 { font-size: 24px; margin-bottom: 6px; }
+    .subtitle { color: var(--muted); margin-bottom: 28px; font-size: 14px; line-height: 1.6; }
+    .input-group { position: relative; margin-bottom: 14px; }
+    .input-group input { width: 100%; padding: 13px 13px 13px 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; font-size: 14px; transition: border-color 0.2s; }
     .input-group input:focus { border-color: var(--green); }
-    .input-group .icon {
-      position: absolute;
-      left: 13px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .options {
-      display: flex;
-      justify-content: flex-end;
-      font-size: 13px;
-      margin-bottom: 20px;
-    }
-    .options a { color: var(--cyan); text-decoration: none; }
-
-    .btn {
-      width: 100%;
-      padding: 13px;
-      border-radius: 10px;
-      border: none;
-      background: linear-gradient(90deg, var(--green), var(--cyan));
-      color: white;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
+    .input-group .icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--muted); pointer-events: none; }
+    .options { display: flex; justify-content: flex-end; font-size: 13px; margin-bottom: 20px; }
+    .options a { color: var(--cyan); text-decoration: none; cursor: pointer; }
+    .options a:hover { text-decoration: underline; }
+    .btn { width: 100%; padding: 13px; border-radius: 10px; border: none; background: linear-gradient(90deg, var(--green), var(--cyan)); color: white; font-weight: 600; font-size: 15px; cursor: pointer; transition: opacity 0.2s; }
     .btn:hover { opacity: 0.88; }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .signup {
-      margin-top: 24px;
-      font-size: 13px;
-      color: var(--muted);
-      text-align: center;
-    }
-    .signup a { color: var(--green); text-decoration: none; }
-
-    /* RIGHT */
-    .right {
-      width: 55%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at center, #0c2a1a, #020617);
-    }
-
-    .visual {
-      text-align: center;
-    }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-ghost { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 14px; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
+    .btn-ghost:hover { border-color: var(--green); color: var(--green); }
+    .signup-link { margin-top: 22px; font-size: 13px; color: var(--muted); text-align: center; }
+    .signup-link a { color: var(--green); text-decoration: none; }
+    .success-icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(34,197,94,0.1); border: 2px solid rgba(34,197,94,0.3); display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 20px; }
+    .alert { padding: 12px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .alert.show { display: block; }
+    .alert-error   { background: rgba(239,68,68,0.1);  border: 1px solid rgba(239,68,68,0.3);  color: var(--danger); }
+    .alert-success { background: rgba(34,197,94,0.1);  border: 1px solid rgba(34,197,94,0.3);  color: var(--green); }
+    .right { width: 55%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, #0c2a1a, #020617); padding: 40px; }
+    .visual { text-align: center; }
     .visual .icon-big { font-size: 72px; margin-bottom: 20px; }
     .visual h2 { font-size: 22px; margin-bottom: 8px; }
-    .visual p { color: var(--muted); font-size: 14px; max-width: 260px; line-height: 1.6; }
-
-    .tag {
-      display: inline-block;
-      margin-top: 24px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      background: rgba(34,197,94,0.1);
-      color: var(--green);
-      font-size: 12px;
-      border: 1px solid rgba(34,197,94,0.2);
-    }
-
-    @media (max-width: 768px) {
-      .right { display: none; }
-      .left { width: 100%; padding: 40px 24px; }
-    }
-    /* --- NOVOS ESTILOS PARA LISTA EXPANSÍVEL --- */
-    .categories-list {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .list-header {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 120px;
-      padding: 14px 20px;
-      background: rgba(255,255,255,0.03);
-      border-bottom: 1px solid var(--border);
-      font-size: 11px;
-      text-transform: uppercase;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-    }
-
-    .cat-row {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 120px;
-      align-items: center;
-      padding: 12px 20px;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.2s;
-    }
-
-    .cat-row:hover { background: rgba(255,255,255,0.01); }
-
-    /* Estilo para Categoria Pai que pode ser clicada */
-    .parent-row { cursor: pointer; }
-
-    /* Estilo para Subcategorias com recuo e esconder/mostrar */
-    .cat-row.sub-row {
-      background: rgba(0,0,0,0.15);
-      padding-left: 45px; 
-      border-bottom: 1px solid rgba(30, 41, 59, 0.4);
-    }
-
-    .cat-row.sub-row.hidden {
-      display: none;
-    }
-
-    .cat-info { display: flex; align-items: center; gap: 10px; }
-    .cat-name { font-size: 14px; font-weight: 500; }
-
-    /* Ícone de Expansão (Seta) */
-    .expand-icon {
-      font-size: 10px;
-      color: var(--muted);
-      width: 15px;
-      transition: transform 0.2s;
-    }
-    .expanded .expand-icon {
-      transform: rotate(90deg);
-      color: var(--green);
-    }
-
-    .cat-actions { display: flex; gap: 8px; justify-content: flex-end; }
-
-    .add-sub-inline {
-      color: var(--cyan);
-      background: transparent;
-      border: none;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-left: 5px;
-      line-height: 1;
-    }
-    .add-sub-inline:hover { color: var(--green); 
-    }
+    .visual p  { color: var(--muted); font-size: 14px; max-width: 260px; line-height: 1.6; margin: 0 auto; }
+    .tag { display: inline-block; margin-top: 24px; padding: 6px 14px; border-radius: 20px; background: rgba(34,197,94,0.1); color: var(--green); font-size: 12px; border: 1px solid rgba(34,197,94,0.2); }
+    @media (max-width: 768px) { .right { display: none; } .left { width: 100%; padding: 40px 24px; } }
   </style>
 </head>
 <body>
 <div class="container">
-
-  <!-- LEFT -->
   <div class="left">
     <div class="logo">Fin<span>Web</span></div>
 
-    <h1>Bem-vindo de volta</h1>
-    <p class="subtitle">Entre com suas credenciais para acessar o sistema</p>
-
-    <div class="input-group">
-      <span class="icon">📧</span>
-      <input type="email" id="email" placeholder="E-mail" required>
+    <!-- VIEW: LOGIN -->
+    <div class="view active" id="viewLogin">
+      <h1>Bem-vindo de volta</h1>
+      <p class="subtitle">Entre com suas credenciais para acessar o sistema.</p>
+      <div class="alert alert-error" id="loginError"></div>
+      <div class="input-group">
+        <span class="icon">📧</span>
+        <input type="email" id="email" placeholder="E-mail" autocomplete="email">
+      </div>
+      <div class="input-group">
+        <span class="icon">🔒</span>
+        <input type="password" id="password" placeholder="Senha" autocomplete="current-password">
+      </div>
+      <div class="options">
+        <a onclick="showView('viewRecovery')">Esqueci minha senha</a>
+      </div>
+      <button class="btn" id="btnLogin">Entrar</button>
+      <p class="signup-link">Não tem conta? <a href="/public/signup.html">Criar conta</a></p>
     </div>
 
-    <div class="input-group">
-      <span class="icon">🔒</span>
-      <input type="password" id="password" placeholder="Senha" required>
+    <!-- VIEW: RECUPERAÇÃO -->
+    <div class="view" id="viewRecovery">
+      <h1>Recuperar senha</h1>
+      <p class="subtitle">Informe seu e-mail e enviaremos um link para criar uma nova senha.</p>
+      <div class="alert alert-error"   id="recoveryError"></div>
+      <div class="alert alert-success" id="recoverySuccess"></div>
+      <div class="input-group">
+        <span class="icon">📧</span>
+        <input type="email" id="recoveryEmail" placeholder="Seu e-mail cadastrado">
+      </div>
+      <button class="btn" id="btnRecovery">Enviar link de recuperação</button>
+      <button class="btn-ghost" onclick="showView('viewLogin')">← Voltar ao login</button>
     </div>
 
-    <div class="options">
-      <a href="#">Esqueci minha senha</a>
+    <!-- VIEW: E-MAIL ENVIADO -->
+    <div class="view" id="viewSent">
+      <div class="success-icon">✉️</div>
+      <h1>E-mail enviado!</h1>
+      <p class="subtitle">
+        Enviamos um link de recuperação para <strong id="sentEmail"></strong>.<br><br>
+        Verifique sua caixa de entrada e a pasta de spam. O link expira em <strong>1 hora</strong>.
+      </p>
+      <button class="btn" onclick="showView('viewLogin')" style="margin-top:8px">Voltar ao login</button>
+      <button class="btn-ghost" onclick="resendEmail()">Reenviar e-mail</button>
     </div>
-
-    <button class="btn" id="btnLogin">Entrar</button>
-
-    <p class="signup">Não tem conta? <a href="/public/signup.html">Criar conta</a></p>
   </div>
 
-  <!-- RIGHT -->
   <div class="right">
     <div class="visual">
       <div class="icon-big">💰</div>
@@ -249,40 +114,87 @@
       <span class="tag">✦ Seguro com Supabase RLS</span>
     </div>
   </div>
-
 </div>
 
 <script type="module">
-  import { initSupabase } from '../src/js/utils/db.js';
+  import { initSupabase, getSupabase } from '../src/js/utils/db.js';
   import { loginUser } from '../src/js/modules/auth.js';
 
   initSupabase();
+  let lastRecoveryEmail = '';
 
-  document.getElementById('btnLogin').addEventListener('click', async () => {
+  window.showView = (id) => {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    clearAlerts();
+  };
+
+  function clearAlerts() {
+    document.querySelectorAll('.alert').forEach(el => { el.textContent = ''; el.classList.remove('show'); });
+  }
+
+  function showAlert(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  // LOGIN
+  async function doLogin() {
     const email    = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
-    const btn      = document.getElementById('btnLogin');
-
-    if (!email || !password) return alert('Preencha email e senha.');
-
-    btn.disabled    = true;
-    btn.textContent = 'Entrando...';
-
+    if (!email || !password) return showAlert('loginError', 'Preencha e-mail e senha.');
+    const btn = document.getElementById('btnLogin');
+    btn.disabled = true; btn.textContent = 'Entrando...';
     try {
       await loginUser(email, password);
       window.location.href = '/public/dashboard.html';
-    } catch (error) {
-      alert(error.message);
+    } catch (err) {
+      showAlert('loginError', '❌ ' + err.message);
     } finally {
-      btn.disabled    = false;
-      btn.textContent = 'Entrar';
+      btn.disabled = false; btn.textContent = 'Entrar';
     }
-  });
+  }
 
-  // Permite login com Enter
-  document.getElementById('password').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') document.getElementById('btnLogin').click();
-  });
+  document.getElementById('btnLogin').addEventListener('click', doLogin);
+  document.getElementById('password').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  // RECUPERAÇÃO
+  async function doRecovery() {
+    const email = document.getElementById('recoveryEmail').value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showAlert('recoveryError', 'Informe um e-mail válido.');
+    const btn = document.getElementById('btnRecovery');
+    btn.disabled = true; btn.textContent = 'Enviando...';
+    try {
+      const supabase = getSupabase();
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/public/reset-password.html'
+      });
+      if (error) throw error;
+      lastRecoveryEmail = email;
+      document.getElementById('sentEmail').textContent = email;
+      showView('viewSent');
+    } catch (err) {
+      showAlert('recoveryError', '❌ ' + err.message);
+    } finally {
+      btn.disabled = false; btn.textContent = 'Enviar link de recuperação';
+    }
+  }
+
+  document.getElementById('btnRecovery').addEventListener('click', doRecovery);
+  document.getElementById('recoveryEmail').addEventListener('keydown', e => { if (e.key === 'Enter') doRecovery(); });
+
+  // REENVIAR
+  window.resendEmail = async () => {
+    if (!lastRecoveryEmail) return showView('viewRecovery');
+    try {
+      const supabase = getSupabase();
+      await supabase.auth.resetPasswordForEmail(lastRecoveryEmail, {
+        redirectTo: window.location.origin + '/public/reset-password.html'
+      });
+      alert('✅ E-mail reenviado para ' + lastRecoveryEmail);
+    } catch (err) { alert('❌ ' + err.message); }
+  };
 </script>
 </body>
 </html>
