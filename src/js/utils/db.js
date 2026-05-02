@@ -5,7 +5,8 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
 
-let supabase = null;
+// ... (resto do seu código db.js)
+export let supabase = null; // Mude de 'let' para 'export let'
 
 export const initSupabase = () => {
   if (!SUPABASE_URL || SUPABASE_URL.includes('SEU_PROJECT_ID')) {
@@ -15,6 +16,7 @@ export const initSupabase = () => {
   console.log('✅ Supabase inicializado');
   return supabase;
 };
+// ...
 
 export const getSupabase = () => {
   if (!supabase) throw new Error('❌ Supabase não foi inicializado! Chame initSupabase() primeiro.');
